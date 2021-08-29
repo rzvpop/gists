@@ -1,4 +1,4 @@
-import React, {useMemo} from "react";
+import React from "react";
 import Gist from "./Gist";
 import {fetchGists} from "./extra/GistService";
 import {debounce} from "lodash";
@@ -8,10 +8,11 @@ class Home extends React.Component {
         super(props);
 
         this.state = {
-            gists: {}
+            gists: {},
+            forks: {}
         };
 
-        this.getPublicGistsHandler = debounce(this.getPublicGistsHandler.bind(this), 300);
+        this.getPublicGistsHandler = debounce(this.getPublicGistsHandler.bind(this), 700);
     }
 
     getPublicGistsHandler(event) {
@@ -34,7 +35,7 @@ class Home extends React.Component {
         if (this.state.gists.length > 0) {
             gistList = this.state.gists.map((gist, index) => {
                 return <div>
-                    <Gist data={gist} />
+                    <Gist forks={[]} data={gist} />
                 </div>;
             });
         }

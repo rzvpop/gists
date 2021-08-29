@@ -35,11 +35,14 @@ function Gist (props) {
                 <div>
                     Size: {file.size}
                 </div>
+                <div>
+                    {props.forks}
+                </div>
             </div>
             <div className="file-right">
-                <div>
-                    <Tag language={file.language} />
-                </div>
+                {file.language && <div>
+                    <Tag language={file.language}/>
+                </div>}
         </div>
         </div>
         {fileContent.text && <hr width="50%"/>}

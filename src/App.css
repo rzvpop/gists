@@ -76,6 +76,7 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: space-between;
+  cursor: pointer;
 }
 
 .gist-card .file-content {

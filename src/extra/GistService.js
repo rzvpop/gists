@@ -9,6 +9,16 @@ export async function fetchFileContent(file) {
     return await fetchData(file.raw_url.slice(0, file.raw_url.indexOf(file.filename) - 1), false);
 }
 
+export  async function fetchForks(urls) {
+    const forkPromises = [];
+
+    for (const url of urls) {
+        forkPromises.push(await fetchData(url));
+    }
+
+    return forkPromises;
+}
+
 async function fetchData(url, isJson = true) {
     const res = await fetch(url, {
         method: 'GET',
