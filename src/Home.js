@@ -1,4 +1,7 @@
-import React from "react";
+import React, {useMemo} from "react";
+import Gist from "./Gist";
+import {fetchGists} from "./extra/GistService";
+import {debounce} from "debounce";
 
 class Home extends React.Component {
     constructor(props) {
@@ -11,19 +14,22 @@ class Home extends React.Component {
         this.getPublicGists = this.getPublicGists.bind(this);
     }
 
-    getPublicGists() {
-        fetch('https://api.github.com/gists/public', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            accept: 'application/vnd.github.v3+json',
+    getPublicGists(event) {
+        const username = event.target.value;
+        fetchGists().then(res => {
+            let gists = [];
+
+            if (Array.isArray(res) && res.length > 0) {
+                gists = res.filter(gist => {
+                    return gist.owner.login === username;
+                });
+            }
+
+            this.setState({gists: gists});
+            console.log(gists);
         })
-            .then(res => res.json())
-            .then(res => {
-                this.setState({gists: res});
-                // console.log(res);
+            .catch(error => {
+                console.log(error);
             });
     }
 
@@ -32,7 +38,9 @@ class Home extends React.Component {
 
         if (this.state.gists.length > 0) {
             gistList = this.state.gists.map((gist, index) => {
-                return <li>{gist.id}</li>;
+                return <div>
+                    <Gist data={gist} />
+                </div>;
             });
         }
 
@@ -44,9 +52,7 @@ class Home extends React.Component {
                 <input onChange={this.getPublicGists} />
             </div>
             <div className="row">
-                <ul>
-                    {gistList}
-                </ul>
+                {gistList}
             </div>
         </div>
     }
