@@ -42,8 +42,8 @@ function Gist (props) {
                 </div>
         </div>
         </div>
-        {fileName && <hr width="98%"/>}
-        {fileContent && <div>
+        {fileContent.text && <hr width="50%"/>}
+        {fileContent.text && <div>
             <code>{fileContent.text}</code>
         </div>}
     </div>;

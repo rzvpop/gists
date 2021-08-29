@@ -1,6 +1,6 @@
-export async function fetchGists() {
-    // const url = `https://api.github.com/users/${username}/gists`;
-    const url = 'http://localhost:8081/gists';
+export async function fetchGists(username) {
+    const url = `https://api.github.com/users/${username}/gists`;
+    // const url = 'http://localhost:8081/gists';
 
     return await fetchData(url);
 }
@@ -24,7 +24,7 @@ async function fetchData(url, isJson = true) {
         return res ? (isJson ? res.json() : await text) : []
     }
 
-    const error = new Error(res.statusText || res.status);
+    const error = new Error(res.statusText);
     error.response = res;
     return Promise.reject(error);
 }

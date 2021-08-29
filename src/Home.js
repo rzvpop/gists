@@ -17,16 +17,8 @@ class Home extends React.Component {
     getPublicGistsHandler(event) {
         const username = event.target.value;
 
-        fetchGists().then(res => {
-            let gists = [];
-
-            if (Array.isArray(res) && res.length > 0) {
-                gists = res.filter(gist => {
-                    return gist.owner.login === username;
-                });
-            }
-
-            this.setState({gists: gists});
+        fetchGists(username).then(res => {
+            this.setState({gists: res});
         })
         .catch(error => {
             console.log(error);
@@ -54,9 +46,9 @@ class Home extends React.Component {
             <div className="row">
                 <input onChange={this.getPublicGistsHandler} />
             </div>
-            <div className="row">
+            {gistList && <div className="row">
                 {gistList}
-            </div>
+            </div>}
         </div>
     }
 }
