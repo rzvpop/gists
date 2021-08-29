@@ -1,7 +1,7 @@
 import React, {useMemo} from "react";
 import Gist from "./Gist";
 import {fetchGists} from "./extra/GistService";
-import {debounce} from "debounce";
+import {debounce} from "lodash";
 
 class Home extends React.Component {
     constructor(props) {
@@ -11,11 +11,12 @@ class Home extends React.Component {
             gists: {}
         };
 
-        this.getPublicGists = this.getPublicGists.bind(this);
+        this.getPublicGistsHandler = debounce(this.getPublicGistsHandler.bind(this), 300);
     }
 
-    getPublicGists(event) {
+    getPublicGistsHandler(event) {
         const username = event.target.value;
+
         fetchGists().then(res => {
             let gists = [];
 
@@ -26,11 +27,13 @@ class Home extends React.Component {
             }
 
             this.setState({gists: gists});
-            console.log(gists);
         })
-            .catch(error => {
-                console.log(error);
-            });
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
+    componentWillUnmount() {
     }
 
     render() {
@@ -49,7 +52,7 @@ class Home extends React.Component {
                 <span>Search</span>
             </div>
             <div className="row">
-                <input onChange={this.getPublicGists} />
+                <input onChange={this.getPublicGistsHandler} />
             </div>
             <div className="row">
                 {gistList}

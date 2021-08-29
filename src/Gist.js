@@ -9,10 +9,14 @@ function Gist (props) {
     const [fileContent, setFileContent] = useState('');
 
     const fileClickHandler = event => {
-        fetchFileContent(file).then(res => {
-                setFileContent({text: res});
-            }
-        );
+        if (!fileContent.text) {
+            fetchFileContent(file).then(res => {
+                    setFileContent({text: res});
+                }
+            );
+        } else {
+            setFileContent({text: ''});
+        }
     };
 
     return <div className="gist-card">

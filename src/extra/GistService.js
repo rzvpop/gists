@@ -10,7 +10,6 @@ export async function fetchFileContent(file) {
 }
 
 async function fetchData(url, isJson = true) {
-    console.log(url);
     const res = await fetch(url, {
         method: 'GET',
         headers: {
