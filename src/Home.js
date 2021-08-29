@@ -1,30 +1,32 @@
 import React from "react";
+import Gist from "./Gist";
+import {fetchGists} from "./extra/GistService";
+import {debounce} from "lodash";
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            gists: {}
+            gists: {},
+            forks: {}
         };
 
-        this.getPublicGists = this.getPublicGists.bind(this);
+        this.getPublicGistsHandler = debounce(this.getPublicGistsHandler.bind(this), 700);
     }
 
-    getPublicGists() {
-        fetch('https://api.github.com/gists/public', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            accept: 'application/vnd.github.v3+json',
+    getPublicGistsHandler(event) {
+        const username = event.target.value;
+
+        fetchGists(username).then(res => {
+            this.setState({gists: res});
         })
-            .then(res => res.json())
-            .then(res => {
-                this.setState({gists: res});
-                // console.log(res);
-            });
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
+    componentWillUnmount() {
     }
 
     render() {
@@ -32,7 +34,9 @@ class Home extends React.Component {
 
         if (this.state.gists.length > 0) {
             gistList = this.state.gists.map((gist, index) => {
-                return <li>{gist.id}</li>;
+                return <div>
+                    <Gist forks={[]} data={gist} />
+                </div>;
             });
         }
 
@@ -41,13 +45,11 @@ class Home extends React.Component {
                 <span>Search</span>
             </div>
             <div className="row">
-                <input onChange={this.getPublicGists} />
+                <input onChange={this.getPublicGistsHandler} />
             </div>
-            <div className="row">
-                <ul>
-                    {gistList}
-                </ul>
-            </div>
+            {gistList && <div className="row">
+                {gistList}
+            </div>}
         </div>
     }
 }
